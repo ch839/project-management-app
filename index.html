@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeOS — Personal Command Center</title>
+    <title>LifeOS â Personal Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
@@ -22,6 +22,11 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.3s ease; }
         .progress-bar { transition: width 0.5s ease; }
+        .kanban-card { transition: all 0.2s ease; cursor: pointer; }
+        .kanban-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .tree-node { transition: all 0.2s ease; }
+        .tree-node:hover { transform: scale(1.05); }
+        .tree-node.clickable { cursor: pointer; }
     </style>
 </head>
 <body class="min-h-screen">
@@ -41,20 +46,20 @@
         const COLORS = ['#3b82f6','#8b5cf6','#ec4899','#f59e0b','#10b981','#06b6d4','#ef4444','#84cc16'];
         const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-        const HOURS = Array.from({length:24}, (_,i) => i);
+        const HOURS = Array.from({length:24}, function(_,i) { return i; });
 
         const TODAY = new Date(2026, 2, 23);
 
         const defaultGoals = [
             {
-                id: 'g1', name: 'Get Super Fit', emoji: '💪', color: '#10b981',
-                deadline: '2026-05-22', description: '60-day transformation — low body fat, washboard abs, high muscle',
+                id: 'g1', name: 'Get Super Fit', emoji: 'ðª', color: '#10b981',
+                deadline: '2026-05-22', description: '60-day transformation â low body fat, washboard abs, high muscle',
                 projects: [
                     {
                         id: 'p1', name: 'Cut Body Fat', goalId: 'g1', color: '#10b981',
                         tasks: [
-                            { id: 't1', title: 'No sugar — daily reminder', type: 'habit', status: 'active', priority: 'high', due: null, notes: 'Zero added sugar. Check labels.' },
-                            { id: 't2', title: 'Calorie deficit — track meals', type: 'habit', status: 'active', priority: 'high', due: null, notes: 'Stay in 500cal deficit. Use MyFitnessPal.' },
+                            { id: 't1', title: 'No sugar â daily reminder', type: 'habit', status: 'active', priority: 'high', due: null, notes: 'Zero added sugar. Check labels.' },
+                            { id: 't2', title: 'Calorie deficit â track meals', type: 'habit', status: 'active', priority: 'high', due: null, notes: 'Stay in 500cal deficit. Use MyFitnessPal.' },
                             { id: 't3', title: 'Drink 1 gallon water daily', type: 'habit', status: 'active', priority: 'medium', due: null, notes: '' },
                             { id: 't4', title: 'Meal prep Sundays', type: 'recurring', status: 'active', priority: 'medium', due: '2026-03-29', notes: 'Prep chicken, rice, veggies for the week' },
                         ]
@@ -71,13 +76,13 @@
                 ]
             },
             {
-                id: 'g2', name: 'TikTok Shop Agency $100K', emoji: '🎬', color: '#8b5cf6',
+                id: 'g2', name: 'TikTok Shop Agency $100K', emoji: 'ð¬', color: '#8b5cf6',
                 deadline: '2026-12-31', description: 'Build and scale TikTok Shop agency to $100K revenue by end of year',
                 projects: [
                     {
                         id: 'p3', name: 'Find Product', goalId: 'g2', color: '#8b5cf6',
                         tasks: [
-                            { id: 't9', title: 'Research trending TikTok Shop products', type: 'task', status: 'done', priority: 'high', due: '2026-03-10', notes: 'Done — found product' },
+                            { id: 't9', title: 'Research trending TikTok Shop products', type: 'task', status: 'done', priority: 'high', due: '2026-03-10', notes: 'Done â found product' },
                             { id: 't10', title: 'Negotiate supplier deal', type: 'task', status: 'done', priority: 'high', due: '2026-03-15', notes: 'Secured pricing' },
                         ]
                     },
@@ -102,7 +107,7 @@
                 ]
             },
             {
-                id: 'g3', name: 'Read & Understand the Bible', emoji: '📖', color: '#f59e0b',
+                id: 'g3', name: 'Read & Understand the Bible', emoji: 'ð', color: '#f59e0b',
                 deadline: '2026-12-31', description: 'Read the entire Bible with deep understanding through study resources',
                 projects: [
                     {
@@ -117,7 +122,7 @@
                 ]
             },
             {
-                id: 'g4', name: 'Get Series 65 License', emoji: '📜', color: '#06b6d4',
+                id: 'g4', name: 'Get Series 65 License', emoji: 'ð', color: '#06b6d4',
                 deadline: '2026-08-31', description: 'Pass the Series 65 exam to become a licensed investment adviser',
                 projects: [
                     {
@@ -133,23 +138,23 @@
                 ]
             },
             {
-                id: 'g5', name: 'Build Personal Brand', emoji: '🎤', color: '#ec4899',
+                id: 'g5', name: 'Build Personal Brand', emoji: 'ð¤', color: '#ec4899',
                 deadline: '2026-12-31', description: 'Start posting content and figure out personal brand identity',
                 projects: [
                     {
                         id: 'p8', name: 'Brand Discovery', goalId: 'g5', color: '#ec4899',
                         tasks: [
-                            { id: 't28', title: 'Define who I want to be / niche brainstorm', type: 'task', status: 'in-progress', priority: 'high', due: '2026-04-01', notes: 'Still figuring this out — explore different angles' },
+                            { id: 't28', title: 'Define who I want to be / niche brainstorm', type: 'task', status: 'in-progress', priority: 'high', due: '2026-04-01', notes: 'Still figuring this out â explore different angles' },
                             { id: 't29', title: 'Study 10 creators I admire', type: 'task', status: 'todo', priority: 'medium', due: '2026-04-07', notes: 'What do they do well? What resonates?' },
                             { id: 't30', title: 'Post first 10 videos (just start)', type: 'task', status: 'todo', priority: 'high', due: '2026-04-15', notes: 'Do not overthink, just post and learn' },
-                            { id: 't31', title: 'Weekly content posting', type: 'recurring', status: 'todo', priority: 'medium', due: '2026-04-20', notes: 'Minimum 3 posts per week' },
+                         { id: 't31', title: 'Weekly content posting', type: 'recurring', status: 'todo', priority: 'medium', due: '2026-04-20', notes: 'Minimum 3 posts per week' },
                         ]
                     }
                 ]
             },
             {
-                id: 'g6', name: 'Gov Contracting', emoji: '🏛️', color: '#64748b',
-                deadline: '2026-12-31', description: 'Explore government contracting opportunities — idea phase',
+                id: 'g6', name: 'Gov Contracting', emoji: 'ðï¸', color: '#64748b',
+                deadline: '2026-12-31', description: 'Explore government contracting opportunities â idea phase',
                 projects: [
                     {
                         id: 'p9', name: 'Research & Exploration', goalId: 'g6', color: '#64748b',
@@ -162,7 +167,7 @@
                 ]
             },
             {
-                id: 'g7', name: 'Room Remodel — Studio', emoji: '🎨', color: '#ef4444',
+                id: 'g7', name: 'Room Remodel â Studio', emoji: 'ð¨', color: '#ef4444',
                 deadline: '2026-06-30', description: 'Transform room into a content studio with full PC setup',
                 projects: [
                     {
@@ -181,19 +186,19 @@
         ];
 
         const defaultHabits = [
-            { id: 'h1', name: 'No Sugar', emoji: '🚫', goalId: 'g1', color: '#10b981' },
-            { id: 'h2', name: 'Track Calories', emoji: '📊', goalId: 'g1', color: '#10b981' },
-            { id: 'h3', name: '1 Gallon Water', emoji: '💧', goalId: 'g1', color: '#10b981' },
-            { id: 'h4', name: 'Gym Session', emoji: '🏋️', goalId: 'g1', color: '#10b981' },
-            { id: 'h5', name: 'Progressive Overload Log', emoji: '📈', goalId: 'g1', color: '#10b981' },
-            { id: 'h6', name: 'Bible Reading (3 ch)', emoji: '📖', goalId: 'g3', color: '#f59e0b' },
-            { id: 'h7', name: 'Myron Golden Study', emoji: '🎓', goalId: 'g3', color: '#f59e0b' },
-            { id: 'h8', name: 'Journal Reflections', emoji: '✍️', goalId: 'g3', color: '#f59e0b' },
+            { id: 'h1', name: 'No Sugar', emoji: 'ð«', goalId: 'g1', color: '#10b981' },
+            { id: 'h2', name: 'Track Calories', emoji: 'ð', goalId: 'g1', color: '#10b981' },
+            { id: 'h3', name: '1 Gallon Water', emoji: 'ð§', goalId: 'g1', color: '#10b981' },
+            { id: 'h4', name: 'Gym Session', emoji: 'ðï¸', goalId: 'g1', color: '#10b981' },
+            { id: 'h5', name: 'Progressive Overload Log', emoji: 'ð', goalId: 'g1', color: '#10b981' },
+            { id: 'h6', name: 'Bible Reading (3 ch)', emoji: 'ð', goalId: 'g3', color: '#f59e0b' },
+            { id: 'h7', name: 'Myron Golden Study', emoji: 'ð', goalId: 'g3', color: '#f59e0b' },
+            { id: 'h8', name: 'Journal Reflections', emoji: 'âï¸', goalId: 'g3', color: '#f59e0b' },
         ];
 
         // ============ STORAGE ============
         function loadData(key, fallback) {
-            try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : fallback; }
+            try { var d = localStorage.getItem(key); return d ? JSON.parse(d) : fallback; }
             catch(e) { return fallback; }
         }
         function saveData(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
@@ -201,7 +206,7 @@
         // ============ HELPERS ============
         function formatDate(d) {
             if (!d) return '';
-            const date = new Date(d + 'T00:00:00');
+            var date = new Date(d + 'T00:00:00');
             return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         }
         function isSameDay(a, b) {
@@ -209,12 +214,12 @@
         }
         function getDaysInMonth(year, month) { return new Date(year, month + 1, 0).getDate(); }
         function getWeekStart(date) {
-            const d = new Date(date);
+            var d = new Date(date);
             d.setDate(d.getDate() - d.getDay());
             return d;
         }
         function addDays(date, n) {
-            const d = new Date(date);
+            var d = new Date(date);
             d.setDate(d.getDate() + n);
             return d;
         }
@@ -234,16 +239,18 @@
 
         // ============ MAIN APP ============
         function App() {
-            const [view, setView] = useState('dashboard');
-            const [goals, setGoals] = useState(function() { return loadData('lifeos_goals', defaultGoals); });
-            const [habits, setHabits] = useState(function() { return loadData('lifeos_habits', defaultHabits); });
-            const [habitLog, setHabitLog] = useState(function() { return loadData('lifeos_habitlog', {}); });
-            const [selectedDate, setSelectedDate] = useState(TODAY);
-            const [calMonth, setCalMonth] = useState(TODAY.getMonth());
-            const [calYear, setCalYear] = useState(TODAY.getFullYear());
-            const [weekStart, setWeekStart] = useState(getWeekStart(TODAY));
-            const [modal, setModal] = useState(null);
-            const [editTask, setEditTask] = useState(null);
+            var [view, setView] = useState('dashboard');
+            var [goals, setGoals] = useState(function() { return loadData('lifeos_goals', defaultGoals); });
+            var [habits, setHabits] = useState(function() { return loadData('lifeos_habits', defaultHabits); });
+            var [habitLog, setHabitLog] = useState(function() { return loadData('lifeos_habitlog', {}); });
+            var [selectedDate, setSelectedDate] = useState(TODAY);
+            var [calMonth, setCalMonth] = useState(TODAY.getMonth());
+            var [calYear, setCalYear] = useState(TODAY.getFullYear());
+            var [weekStart, setWeekStart] = useState(getWeekStart(TODAY));
+            var [modal, setModal] = useState(null);
+            var [editTask, setEditTask] = useState(null);
+            var [kanbanGoalFilter, setKanbanGoalFilter] = useState('');
+            var [selectedMindMapGoal, setSelectedMindMapGoal] = useState(goals.length > 0 ? goals[0].id : '');
 
             useEffect(function() { saveData('lifeos_goals', goals); }, [goals]);
             useEffect(function() { saveData('lifeos_habits', habits); }, [habits]);
@@ -254,7 +261,7 @@
                 goals.forEach(function(g) {
                     g.projects.forEach(function(p) {
                         p.tasks.forEach(function(t) {
-                            tasks.push(Object.assign({}, t, {projectName: p.name, goalName: g.name, goalColor: g.color, goalEmoji: g.emoji}));
+                            tasks.push(Object.assign({}, t, {projectName: p.name, goalName: g.name, goalColor: g.color, goalEmoji: g.emoji, projectId: p.id}));
                         });
                     });
                 });
@@ -320,6 +327,19 @@
                 });
             }
 
+            function addProject(goalId, projectName) {
+                setGoals(function(prev) {
+                    return prev.map(function(g) {
+                        if (g.id === goalId) {
+                            return Object.assign({}, g, {
+                                projects: g.projects.concat([{id: 'p' + Date.now(), name: projectName, goalId: goalId, color: g.color, tasks: []}])
+                            });
+                        }
+                        return g;
+                    });
+                });
+            }
+
             function goalProgress(goal) {
                 var total = 0, done = 0;
                 goal.projects.forEach(function(p) { p.tasks.forEach(function(t) { total++; if (t.status === 'done') done++; }); });
@@ -327,13 +347,15 @@
             }
 
             var viewsList = [
-                { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-                { id: 'goals', label: 'Goals & Projects', icon: '🎯' },
-                { id: 'timeline', label: 'Year Timeline', icon: '📅' },
-                { id: 'monthly', label: 'Monthly Calendar', icon: '🗓' },
-                { id: 'weekly', label: 'Weekly Calendar', icon: '📆' },
-                { id: 'daily', label: 'Daily Agenda', icon: '☀️' },
-                { id: 'habits', label: 'Habits', icon: '🔥' },
+                { id: 'dashboard', label: 'Dashboard', icon: 'ð' },
+                { id: 'goals', label: 'Goals & Projects', icon: 'ð¯' },
+                { id: 'kanban', label: 'Kanban', icon: 'ð' },
+                { id: 'mindmap', label: 'Mind Map', icon: 'ð§ ' },
+                { id: 'timeline', label: 'Year Timeline', icon: 'ð' },
+                { id: 'monthly', label: 'Monthly Calendar', icon: 'ð' },
+                { id: 'weekly', label: 'Weekly Calendar', icon: 'ð' },
+                { id: 'daily', label: 'Daily Agenda', icon: 'âï¸' },
+                { id: 'habits', label: 'Habits', icon: 'ð¥' },
             ];
 
             // ============ TASK MODAL ============
@@ -355,29 +377,29 @@
                                 <span className="px-2 py-1 rounded text-xs font-medium" style={{background: sc+'22', color: sc}}>{sb}</span>
                                 <span className="px-2 py-1 rounded text-xs font-medium" style={{background: priorityColor(task.priority)+'22', color: priorityColor(task.priority)}}>{task.priority}</span>
                                 {task.goalEmoji && <span className="px-2 py-1 rounded text-xs bg-slate-700 text-slate-300">{task.goalEmoji} {task.goalName}</span>}
-                                {task.projectName && <span className="px-2 py-1 rounded text-xs bg-slate-700 text-slate-300">{task.projectName}</span>}
+                                  {task.projectName && <span className="px-2 py-1 rounded text-xs bg-slate-700 text-slate-300">{task.projectName}</span>}
                             </div>
                             {task.due && <p className="text-sm text-slate-400 mb-3">Due: {formatDate(task.due)}</p>}
-                            {task.notes && <p className="text-sm text-slate-300 mb-4 bg-slate-900/50 p-3 rounded">{task.notes}</p>}
-                            <div className="flex gap-2 flex-wrap">
-                                {task.status !== 'done' && <button onClick={function() { updateTaskStatus(task.id, 'done'); onClose(); }} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm font-medium">Mark Done</button>}
-                                {task.status !== 'in-progress' && task.status !== 'done' && <button onClick={function() { updateTaskStatus(task.id, 'in-progress'); onClose(); }} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium">Start</button>}
-                                {task.status === 'done' && <button onClick={function() { updateTaskStatus(task.id, 'todo'); onClose(); }} className="px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded-lg text-sm font-medium">Reopen</button>}
-                            </div>
+                            {task.notes && <p className="text-sm text-slate-300 mb-4 bg-slate-900.5 p-3 rounded">{task.nes}</p>}
+                              <div className="flex gap-2 flex-wrap">
+                                  {task.status !== 'done' && <button onClick={function() { updateTaskStatus(task.id, 'done'); onClose(); }} className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-sm font-medium">Mark Done</button>}
+                                  {task.status !== 'in-progress' && task.status !== 'done' && <button onClick={function() { updateTaskStatus(task.id, 'in-progress'); onClose(); }} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium">Start</button>}
+                                  {task.status === 'done' && <button onClick={function() { updateTaskStatus(task.id, 'todo'); onClose(); }} className="px-4 py-2 bg-slate-600 hover:bg-slate-500 rounded-lg text-sm font-medium">Reopen</button>}
+                              </div>
                         </div>
                     </div>
                 );
             }
 
-            // ============ ADD TASK MODAL ============
+            // ============ ADE TASK MODAL ============
             function AddTaskModal(props) {
                 var onClose = props.onClose;
-                const [title, setTitle] = useState('');
-                const [projectId, setProjectId] = useState('');
-                const [due, setDue] = useState('');
-                const [priority, setPriority] = useState('medium');
-                const [type, setType] = useState('task');
-                const [notes, setNotes] = useState('');
+                var [title, setTitle] = useState('');
+                var [projectId, setProjectId] = useState('');
+                var [due, setDue] = useState('');
+                var [priority, setPriority] = useState('medium');
+                var [type, setType] = useState('task');
+                var [notes, setNotes] = useState('');
                 var allProjects = goals.flatMap(function(g) { return g.projects.map(function(p) { return Object.assign({}, p, {goalName: g.name, goalEmoji: g.emoji}); }); });
                 return (
                     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
@@ -390,7 +412,7 @@
                                 <input value={title} onChange={function(e){setTitle(e.target.value);}} placeholder="Task title..." className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
                                 <select value={projectId} onChange={function(e){setProjectId(e.target.value);}} className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm">
                                     <option value="">Select project...</option>
-                                    {allProjects.map(function(p) { return <option key={p.id} value={p.id}>{p.goalEmoji} {p.goalName} — {p.name}</option>; })}
+                                    {allProjects.map(function(p) { return <option key={p.id} value={p.id}>{p.goalEmoji} {p.goalName} â {p.name}</option>; })}
                                 </select>
                                 <div className="flex gap-2">
                                     <input type="date" value={due} onChange={function(e){setDue(e.target.value);}} className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
@@ -403,6 +425,30 @@
                                 </div>
                                 <textarea value={notes} onChange={function(e){setNotes(e.target.value);}} placeholder="Notes..." rows={3} className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
                                 <button onClick={function() { if (title && projectId) { addTask(projectId, {title: title, type: type, status:'todo', priority: priority, due: due || null, notes: notes}); onClose(); }}} className="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium">Add Task</button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // ============ ADD PROJECT MODAL ============
+            function AddProjectModal(props) {
+                var onClose = props.onClose;
+                var [projectName, setProjectName] = useState('');
+                var [selectedGoal, setSelectedGoal] = useState(props.goalId || goals[0].id);
+                return (
+                    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
+                        <div className="bg-slate-800 rounded-xl p-6 max-w-lg w-full border border-slate-700 fade-in" onClick={function(e) { e.stopPropagation(); }}>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-xl font-bold">New Project</h3>
+                                <button onClick={onClose} className="text-slate-400 hover:text-white text-2xl">&times;</button>
+                            </div>
+                            <div className="space-y-3">
+                                <input value={projectName} onChange={function(e){setProjectName(e.target.value);}} placeholder="Project name..." className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm" />
+                                <select value={selectedGoal} onChange={function(e){setSelectedGoal(e.target.value);}} className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm">
+                                    {goals.map(function(g) { return <option key={g.id} value={g.id}>{g.emoji} {g.name}</option>; })}
+                                </select>
+                                <button onClick={function() { if (projectName && selectedGoal) { addProject(selectedGoal, projectName); onClose(); }}} className="w-full py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium">Add Project</button>
                             </div>
                         </div>
                     </div>
@@ -432,7 +478,7 @@
                 );
             }
 
-            // ============ DASHBOARD ============
+            // ============DDASHBOARD ============
             function Dashboard() {
                 var habitsDoneToday = habits.filter(function(h) { return isHabitDone(h.id, TODAY); }).length;
                 var inProgress = allTasks.filter(function(t) { return t.status === 'in-progress'; }).length;
@@ -469,7 +515,7 @@
                             })}
                         </div>
 
-                        <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
+                        <div className="bg-slate-800/50 border border-slate-700.5 rounded-xl p-5">
                             <h3 className="font-semibold mb-4">Goal Progress</h3>
                             <div className="space-y-3">
                                 {goals.map(function(g) {
@@ -477,7 +523,7 @@
                                     return (
                                         <div key={g.id}>
                                             <div className="flex justify-between text-sm mb-1">
-                                                <span>{g.emoji} {g.name}</span>
+                                                <span>{}.imoji} {g.name}</span>
                                                 <span className="text-slate-400">{pct}%</span>
                                             </div>
                                             <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
@@ -490,536 +536,11 @@
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
+                            <div className="bg-slate-800/50 border border-slate-700.5 rounded-xl p-5">
                                 <h3 className="font-semibold mb-3">Today's Habits</h3>
                                 <div className="space-y-2">
                                     {habits.map(function(h) {
                                         return (
                                             <button key={h.id} onClick={function() { toggleHabit(h.id, TODAY); }}
-                                                className={'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-left transition ' + (isHabitDone(h.id, TODAY) ? 'bg-emerald-900/30 border border-emerald-700/30' : 'bg-slate-900/50 border border-slate-700/30 hover:border-slate-600')}>
-                                                <span className={'w-5 h-5 rounded-full border-2 flex items-center justify-center text-xs ' + (isHabitDone(h.id, TODAY) ? 'border-emerald-400 bg-emerald-400 text-slate-900' : 'border-slate-600')}>
-                                                    {isHabitDone(h.id, TODAY) && '✓'}
-                                                </span>
-                                                <span>{h.emoji} {h.name}</span>
-                                                {getStreak(h.id) > 0 && <span className="ml-auto text-xs text-orange-400">🔥 {getStreak(h.id)}</span>}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
-                                <h3 className="font-semibold mb-3">Upcoming (7 days)</h3>
-                                <div className="space-y-2 max-h-64 overflow-auto scrollbar-hide">
-                                    {upcomingTasks.length === 0 && <p className="text-sm text-slate-500">No upcoming tasks</p>}
-                                    {upcomingTasks.map(function(t) {
-                                        return (
-                                            <button key={t.id} onClick={function() { setEditTask(t); }} className="w-full text-left px-3 py-2 bg-slate-900/50 border border-slate-700/30 rounded-lg text-sm hover:border-slate-600 transition">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="w-2 h-2 rounded-full" style={{background: t.goalColor}} />
-                                                    <span className="flex-1 truncate">{t.title}</span>
-                                                    <span className="text-xs text-slate-500">{formatDate(t.due)}</span>
-                                                </div>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
-                            <h3 className="font-semibold mb-3">Tasks by Priority</h3>
-                            <div style={{height: 200}}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={priorityData}>
-                                        <XAxis dataKey="name" tick={{fill:'#94a3b8', fontSize:12}} axisLine={false} tickLine={false} />
-                                        <YAxis tick={{fill:'#94a3b8', fontSize:12}} axisLine={false} tickLine={false} />
-                                        <Bar dataKey="count" radius={[4,4,0,0]}>
-                                            {priorityData.map(function(entry, i) { return <Cell key={i} fill={entry.fill} />; })}
-                                        </Bar>
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            // ============ GOALS & PROJECTS ============
-            function GoalsView() {
-                const [expanded, setExpanded] = useState({});
-                function toggle(id) { setExpanded(function(prev) { var next = Object.assign({}, prev); next[id] = !prev[id]; return next; }); }
-
-                return (
-                    <div className="space-y-6 fade-in">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-2xl font-bold">Goals & Projects</h2>
-                            <button onClick={function() { setModal('addTask'); }} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg text-sm font-medium">+ New Task</button>
-                        </div>
-                        <p className="text-slate-400 text-sm">Reverse-engineered goal tree: Goals &rarr; Projects &rarr; Tasks</p>
-
-                        <div className="space-y-4">
-                            {goals.map(function(g) {
-                                var pct = goalProgress(g);
-                                var isExp = expanded[g.id] !== false;
-                                return (
-                                    <div key={g.id} className="bg-slate-800/50 border border-slate-700/50 rounded-xl overflow-hidden">
-                                        <button onClick={function() { toggle(g.id); }} className="w-full px-5 py-4 flex items-center gap-3 text-left hover:bg-slate-800/80 transition">
-                                            <span className="text-2xl">{g.emoji}</span>
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-3">
-                                                    <h3 className="font-bold text-lg">{g.name}</h3>
-                                                    <span className="text-xs text-slate-500">Due {formatDate(g.deadline)}</span>
-                                                </div>
-                                                <p className="text-xs text-slate-400 mt-0.5">{g.description}</p>
-                                                <div className="mt-2 flex items-center gap-3">
-                                                    <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden max-w-xs">
-                                                        <div className="h-full rounded-full progress-bar" style={{width: pct+'%', background: g.color}} />
-                                                    </div>
-                                                    <span className="text-xs font-medium" style={{color: g.color}}>{pct}%</span>
-                                                </div>
-                                            </div>
-                                            <span className={'text-slate-500 transition-transform ' + (isExp ? 'rotate-180' : '')} style={{display:'inline-block',transition:'transform 0.2s',transform: isExp ? 'rotate(180deg)' : 'rotate(0deg)'}}>▼</span>
-                                        </button>
-                                        {isExp && (
-                                            <div className="px-5 pb-4 space-y-4">
-                                                {g.projects.map(function(p) {
-                                                    return (
-                                                        <div key={p.id} className="ml-6 goal-tree-line pl-4">
-                                                            <h4 className="font-semibold text-sm mb-2 flex items-center gap-2">
-                                                                <span className="w-2 h-2 rounded-full" style={{background: g.color}} />
-                                                                {p.name}
-                                                            </h4>
-                                                            <div className="space-y-1">
-                                                                {p.tasks.map(function(t) {
-                                                                    var badge = statusBadge(t.status);
-                                                                    return (
-                                                                        <button key={t.id} onClick={function() { setEditTask(Object.assign({}, t, {projectName: p.name, goalName: g.name, goalColor: g.color, goalEmoji: g.emoji})); }}
-                                                                            className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-900/40 hover:bg-slate-900/70 transition text-sm">
-                                                                            <span className={'w-4 h-4 rounded border flex items-center justify-center text-xs ' + (t.status === 'done' ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-600')}>
-                                                                                {t.status === 'done' && '✓'}
-                                                                            </span>
-                                                                            <span className={'flex-1 ' + (t.status === 'done' ? 'line-through text-slate-500' : '')}>{t.title}</span>
-                                                                            <span className="px-1.5 py-0.5 rounded text-xs" style={{background: badge[1]+'22', color: badge[1]}}>{badge[0]}</span>
-                                                                            <span className="px-1.5 py-0.5 rounded text-xs" style={{background: priorityColor(t.priority)+'22', color: priorityColor(t.priority)}}>{t.priority}</span>
-                                                                            {t.due && <span className="text-xs text-slate-500">{formatDate(t.due)}</span>}
-                                                                        </button>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                );
-            }
-
-            // ============ YEAR TIMELINE (GANTT) ============
-            function TimelineView() {
-                var startMonth = 2;
-                var endMonth = 11;
-                var monthsArr = [];
-                for (var m = startMonth; m <= endMonth; m++) monthsArr.push(m);
-                var rangeStart = new Date(2026, startMonth, 1);
-                var rangeEnd = new Date(2026, endMonth + 1, 0);
-                var totalDaysInRange = daysBetween(rangeStart, rangeEnd) + 1;
-
-                function dayOffset(ds) {
-                    var d = new Date(ds + 'T00:00:00');
-                    return Math.max(0, Math.min(totalDaysInRange, daysBetween(rangeStart, d)));
-                }
-
-                var todayOffset = daysBetween(rangeStart, TODAY);
-                var todayPct = (todayOffset / totalDaysInRange) * 100;
-
-                return (
-                    <div className="space-y-4 fade-in">
-                        <h2 className="text-2xl font-bold">Year Timeline — 2026</h2>
-                        <p className="text-slate-400 text-sm">March through December 2026. Bars = goals, dots = tasks.</p>
-
-                        <div className="overflow-x-auto scrollbar-hide">
-                            <div style={{minWidth: 1200}}>
-                                {/* Month headers */}
-                                <div className="flex border-b border-slate-700 pb-2 mb-2">
-                                    <div className="w-48 shrink-0" />
-                                    <div className="flex-1 flex">
-                                        {monthsArr.map(function(m) {
-                                            var daysInMonth = getDaysInMonth(2026, m);
-                                            var pct = (daysInMonth / totalDaysInRange) * 100;
-                                            return <div key={m} className="text-xs text-slate-400 font-medium text-center" style={{width: pct + '%'}}>{MONTHS[m]}</div>;
-                                        })}
-                                    </div>
-                                </div>
-
-                                {/* Goal rows */}
-                                {goals.map(function(g) {
-                                    return (
-                                        <div key={g.id} className="mb-5">
-                                            {/* Goal bar row */}
-                                            <div className="flex items-center mb-1">
-                                                <div className="w-48 shrink-0 flex items-center gap-2 pr-4">
-                                                    <span>{g.emoji}</span>
-                                                    <span className="text-sm font-semibold truncate">{g.name}</span>
-                                                </div>
-                                                <div className="flex-1 relative h-6">
-                                                    {g.deadline && (function() {
-                                                        var endDay = dayOffset(g.deadline);
-                                                        var width = (endDay / totalDaysInRange) * 100;
-                                                        return <div className="absolute h-6 rounded-md gantt-bar" style={{left: '0%', width: Math.min(width, 100)+'%', background: g.color, opacity: 0.25}} />;
-                                                    })()}
-                                                    {/* Today line */}
-                                                    <div className="absolute top-0 h-6 border-l-2 border-red-500/60" style={{left: todayPct + '%'}} />
-                                                </div>
-                                            </div>
-
-                                            {/* Project sub-rows */}
-                                            {g.projects.map(function(p) {
-                                                return (
-                                                    <div key={p.id} className="flex items-center mb-0.5">
-                                                        <div className="w-48 shrink-0 pl-6 pr-4">
-                                                            <span className="text-xs text-slate-500 truncate block">{p.name}</span>
-                                                        </div>
-                                                        <div className="flex-1 relative h-5">
-                                                            {p.tasks.filter(function(t) { return t.due; }).map(function(t) {
-                                                                var pos = (dayOffset(t.due) / totalDaysInRange) * 100;
-                                                                var dotColor = t.status === 'done' ? '#10b981' : t.status === 'in-progress' ? '#3b82f6' : g.color;
-                                                                return (
-                                                                    <div key={t.id} className="absolute top-1 cursor-pointer group" style={{left: pos+'%'}}
-                                                                        onClick={function() { setEditTask(Object.assign({}, t, {projectName: p.name, goalName: g.name, goalColor: g.color, goalEmoji: g.emoji})); }}>
-                                                                        <div className="w-3 h-3 rounded-full border-2 border-slate-900" style={{background: dotColor}} />
-                                                                        <div className="absolute bottom-full left-1/2 mb-1 px-2 py-1 bg-slate-900 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition pointer-events-none border border-slate-700 z-20" style={{transform:'translateX(-50%)'}}>
-                                                                            {t.title} — {formatDate(t.due)}
-                                                                        </div>
-                                                                    </div>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            // ============ MONTHLY CALENDAR ============
-            function MonthlyCalendar() {
-                var daysInMonth = getDaysInMonth(calYear, calMonth);
-                var firstDay = new Date(calYear, calMonth, 1).getDay();
-                var cells = [];
-                for (var i = 0; i < firstDay; i++) cells.push(null);
-                for (var d = 1; d <= daysInMonth; d++) cells.push(d);
-
-                function tasksForDay(day) {
-                    if (!day) return [];
-                    var ds = calYear + '-' + String(calMonth+1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
-                    return allTasks.filter(function(t) { return t.due === ds; });
-                }
-
-                return (
-                    <div className="space-y-4 fade-in">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-2xl font-bold">Monthly Calendar</h2>
-                            <div className="flex items-center gap-3">
-                                <button onClick={function() { if (calMonth === 0) { setCalMonth(11); setCalYear(calYear-1); } else setCalMonth(calMonth-1); }} className="px-3 py-1 bg-slate-800 rounded-lg text-sm hover:bg-slate-700">&larr;</button>
-                                <span className="font-medium">{MONTHS[calMonth]} {calYear}</span>
-                                <button onClick={function() { if (calMonth === 11) { setCalMonth(0); setCalYear(calYear+1); } else setCalMonth(calMonth+1); }} className="px-3 py-1 bg-slate-800 rounded-lg text-sm hover:bg-slate-700">&rarr;</button>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-7 gap-px bg-slate-800 rounded-xl overflow-hidden border border-slate-700">
-                            {DAYS.map(function(d) { return <div key={d} className="bg-slate-900 px-2 py-2 text-center text-xs font-medium text-slate-400">{d}</div>; })}
-                            {cells.map(function(day, i) {
-                                var tasks = tasksForDay(day);
-                                var isToday = day && calYear === TODAY.getFullYear() && calMonth === TODAY.getMonth() && day === TODAY.getDate();
-                                return (
-                                    <div key={i} className={'bg-slate-900/80 min-h-[100px] p-1.5 cal-cell ' + (day ? 'cursor-pointer' : '')}
-                                        onClick={function() { if (day) { setSelectedDate(new Date(calYear, calMonth, day)); setView('daily'); }}}>
-                                        {day && (
-                                            <React.Fragment>
-                                                <span className={'text-xs inline-flex items-center justify-center w-6 h-6 rounded-full ' + (isToday ? 'bg-blue-600 text-white font-bold' : 'text-slate-400')}>{day}</span>
-                                                <div className="mt-1 space-y-0.5">
-                                                    {tasks.slice(0, 3).map(function(t) {
-                                                        return (
-                                                            <div key={t.id} className="text-xs px-1 py-0.5 rounded truncate" style={{background: t.goalColor + '22', color: t.goalColor}}>
-                                                                {t.title}
-                                                            </div>
-                                                        );
-                                                    })}
-                                                    {tasks.length > 3 && <div className="text-xs text-slate-500 px-1">+{tasks.length - 3} more</div>}
-                                                </div>
-                                            </React.Fragment>
-                                        )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                );
-            }
-
-            // ============ WEEKLY CALENDAR ============
-            function WeeklyCalendar() {
-                var days = Array.from({length: 7}, function(_, i) { return addDays(weekStart, i); });
-
-                return (
-                    <div className="space-y-4 fade-in">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-2xl font-bold">Weekly Calendar</h2>
-                            <div className="flex items-center gap-3">
-                                <button onClick={function() { setWeekStart(addDays(weekStart, -7)); }} className="px-3 py-1 bg-slate-800 rounded-lg text-sm hover:bg-slate-700">&larr; Prev</button>
-                                <span className="font-medium text-sm">{formatDate(dateStr(weekStart))} — {formatDate(dateStr(addDays(weekStart, 6)))}</span>
-                                <button onClick={function() { setWeekStart(addDays(weekStart, 7)); }} className="px-3 py-1 bg-slate-800 rounded-lg text-sm hover:bg-slate-700">Next &rarr;</button>
-                                <button onClick={function() { setWeekStart(getWeekStart(TODAY)); }} className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-lg text-sm hover:bg-blue-600/30">Today</button>
-                            </div>
-                        </div>
-
-                        <div className="overflow-auto scrollbar-hide" style={{maxHeight: 'calc(100vh - 160px)'}}>
-                            <div className="min-w-[900px]">
-                                {/* Header */}
-                                <div className="grid grid-cols-8">
-                                    <div className="bg-slate-900 border-b border-slate-700 p-2" />
-                                    {days.map(function(d, i) {
-                                        var isToday = isSameDay(d, TODAY);
-                                        return (
-                                            <div key={i} className={'bg-slate-900 border-b border-l border-slate-700 p-2 text-center ' + (isToday ? 'bg-blue-900/20' : '')}>
-                                                <div className="text-xs text-slate-400">{DAYS[d.getDay()]}</div>
-                                                <div className={'text-lg font-bold ' + (isToday ? 'text-blue-400' : '')}>{d.getDate()}</div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-
-                                {/* Hour rows */}
-                                {HOURS.filter(function(h) { return h >= 6 && h <= 23; }).map(function(hour) {
-                                    return (
-                                        <div key={hour} className="grid grid-cols-8">
-                                            <div className="border-b border-slate-800 px-2 py-3 text-xs text-slate-500 text-right pr-3">
-                                                {hour === 0 ? '12 AM' : hour < 12 ? hour + ' AM' : hour === 12 ? '12 PM' : (hour-12) + ' PM'}
-                                            </div>
-                                            {days.map(function(d, di) {
-                                                var dayTasksHere = hour === 9 ? allTasks.filter(function(t) { return t.due === dateStr(d) && t.status !== 'done'; }) : [];
-                                                var isToday = isSameDay(d, TODAY);
-                                                return (
-                                                    <div key={di} className={'border-b border-l border-slate-800 p-1 min-h-[48px] ' + (isToday ? 'bg-blue-900/5' : '')}>
-                                                        {dayTasksHere.map(function(t) {
-                                                            return (
-                                                                <button key={t.id} onClick={function() { setEditTask(t); }}
-                                                                    className="w-full text-left px-1.5 py-1 rounded text-xs mb-0.5 truncate block" style={{background: t.goalColor + '22', color: t.goalColor}}>
-                                                                    {t.title}
-                                                                </button>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            // ============ DAILY AGENDA ============
-            function DailyAgenda() {
-                var ds = dateStr(selectedDate);
-                var dayTasks = allTasks.filter(function(t) { return t.due === ds; });
-                var isToday = isSameDay(selectedDate, TODAY);
-
-                return (
-                    <div className="space-y-6 fade-in">
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h2 className="text-2xl font-bold">{isToday ? "Today's Agenda" : selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</h2>
-                                <p className="text-slate-400 text-sm mt-1">{selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <button onClick={function() { setSelectedDate(addDays(selectedDate, -1)); }} className="px-3 py-1 bg-slate-800 rounded-lg text-sm hover:bg-slate-700">&larr;</button>
-                                <button onClick={function() { setSelectedDate(TODAY); }} className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-lg text-sm hover:bg-blue-600/30">Today</button>
-                                <button onClick={function() { setSelectedDate(addDays(selectedDate, 1)); }} className="px-3 py-1 bg-slate-800 rounded-lg text-sm hover:bg-slate-700">&rarr;</button>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-3 gap-4">
-                            <div className="col-span-2 space-y-4">
-                                <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
-                                    <h3 className="font-semibold mb-3">Tasks ({dayTasks.length})</h3>
-                                    {dayTasks.length === 0 && <p className="text-sm text-slate-500">No tasks scheduled for this day</p>}
-                                    <div className="space-y-2">
-                                        {dayTasks.map(function(t) {
-                                            return (
-                                                <button key={t.id} onClick={function() { setEditTask(t); }}
-                                                    className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-700/30 hover:border-slate-600 transition">
-                                                    <span className={'w-5 h-5 rounded border-2 flex items-center justify-center text-xs ' + (t.status === 'done' ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-600')}>
-                                                        {t.status === 'done' && '✓'}
-                                                    </span>
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className={'text-sm font-medium ' + (t.status === 'done' ? 'line-through text-slate-500' : '')}>{t.title}</p>
-                                                        <p className="text-xs text-slate-500">{t.goalEmoji} {t.goalName} &rarr; {t.projectName}</p>
-                                                    </div>
-                                                    <span className="px-2 py-0.5 rounded text-xs" style={{background: priorityColor(t.priority)+'22', color: priorityColor(t.priority)}}>{t.priority}</span>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-
-                                <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
-                                    <h3 className="font-semibold mb-3">Schedule</h3>
-                                    <div className="space-y-0">
-                                        {HOURS.filter(function(h) { return h >= 6 && h <= 22; }).map(function(h) {
-                                            return (
-                                                <div key={h} className="flex items-start gap-3 py-2 border-t border-slate-800">
-                                                    <span className="text-xs text-slate-500 w-14 text-right shrink-0 pt-0.5">{h === 0 ? '12 AM' : h < 12 ? h + ' AM' : h === 12 ? '12 PM' : (h-12) + ' PM'}</span>
-                                                    <div className="flex-1 min-h-[24px]">
-                                                        {h === 9 && dayTasks.filter(function(t) { return t.status !== 'done'; }).map(function(t) {
-                                                            return <div key={t.id} className="text-xs px-2 py-1 rounded mb-1" style={{background: t.goalColor + '22', color: t.goalColor}}>{t.title}</div>;
-                                                        })}
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="space-y-4">
-                                <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
-                                    <h3 className="font-semibold mb-3">Habit Check-in</h3>
-                                    <div className="space-y-2">
-                                        {habits.map(function(h) {
-                                            return (
-                                                <button key={h.id} onClick={function() { toggleHabit(h.id, selectedDate); }}
-                                                    className={'w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition ' + (isHabitDone(h.id, selectedDate) ? 'bg-emerald-900/30 border border-emerald-700/30' : 'bg-slate-900/50 border border-slate-700/30 hover:border-slate-600')}>
-                                                    <span className={'w-4 h-4 rounded-full border-2 flex items-center justify-center text-xs ' + (isHabitDone(h.id, selectedDate) ? 'border-emerald-400 bg-emerald-400 text-slate-900' : 'border-slate-600')}>
-                                                        {isHabitDone(h.id, selectedDate) && '✓'}
-                                                    </span>
-                                                    <span className="truncate">{h.emoji} {h.name}</span>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-
-                                <div className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
-                                    <h3 className="font-semibold mb-3">Quick Stats</h3>
-                                    <div className="space-y-2 text-sm">
-                                        <div className="flex justify-between"><span className="text-slate-400">Tasks due</span><span className="font-bold">{dayTasks.length}</span></div>
-                                        <div className="flex justify-between"><span className="text-slate-400">Completed</span><span className="font-bold text-emerald-400">{dayTasks.filter(function(t) { return t.status === 'done'; }).length}</span></div>
-                                        <div className="flex justify-between"><span className="text-slate-400">Habits done</span><span className="font-bold text-blue-400">{habits.filter(function(h) { return isHabitDone(h.id, selectedDate); }).length}/{habits.length}</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }
-
-            // ============ HABITS VIEW ============
-            function HabitsView() {
-                var last30 = Array.from({length: 30}, function(_, i) { return addDays(TODAY, -29 + i); });
-                var last7 = Array.from({length: 7}, function(_, i) { return addDays(TODAY, -6 + i); });
-
-                return (
-                    <div className="space-y-6 fade-in">
-                        <h2 className="text-2xl font-bold">Habits & Streaks</h2>
-                        <p className="text-slate-400 text-sm">Track daily habits. Click to toggle completion.</p>
-
-                        <div className="space-y-4">
-                            {habits.map(function(h) {
-                                var streak = getStreak(h.id);
-                                var goal = goals.find(function(g) { return g.id === h.goalId; });
-                                return (
-                                    <div key={h.id} className="bg-slate-800/50 border border-slate-700/50 rounded-xl p-5">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-2xl">{h.emoji}</span>
-                                                <div>
-                                                    <h3 className="font-semibold">{h.name}</h3>
-                                                    {goal && <p className="text-xs text-slate-500">{goal.emoji} {goal.name}</p>}
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                {streak > 0 && <span className="text-lg font-bold text-orange-400">🔥 {streak} day{streak > 1 ? 's' : ''}</span>}
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <span className="text-xs text-slate-500 w-16">This week</span>
-                                            <div className="flex gap-1.5">
-                                                {last7.map(function(d, i) {
-                                                    var done = isHabitDone(h.id, d);
-                                                    var dayIsToday = isSameDay(d, TODAY);
-                                                    return (
-                                                        <button key={i} onClick={function() { toggleHabit(h.id, d); }}
-                                                            className={'habit-dot w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium border-2 transition ' +
-                                                            (done ? 'border-emerald-500 bg-emerald-500/20 text-emerald-400' : dayIsToday ? 'border-blue-500 bg-slate-900 text-blue-400' : 'border-slate-700 bg-slate-900 text-slate-500')}>
-                                                            {done ? '✓' : DAYS[d.getDay()].charAt(0)}
-                                                        </button>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center gap-1">
-                                            <span className="text-xs text-slate-500 w-16">30 days</span>
-                                            <div className="flex gap-0.5 flex-wrap">
-                                                {last30.map(function(d, i) {
-                                                    var done = isHabitDone(h.id, d);
-                                                    return (
-                                                        <button key={i} onClick={function() { toggleHabit(h.id, d); }}
-                                                            className="habit-dot w-4 h-4 rounded-sm transition"
-                                                            style={{background: done ? (h.color || '#10b981') : '#1e293b'}}
-                                                            title={dateStr(d)} />
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                );
-            }
-
-            // ============ RENDER ============
-            var viewMap = {
-                dashboard: Dashboard,
-                goals: GoalsView,
-                timeline: TimelineView,
-                monthly: MonthlyCalendar,
-                weekly: WeeklyCalendar,
-                daily: DailyAgenda,
-                habits: HabitsView,
-            };
-            var CurrentView = viewMap[view] || Dashboard;
-
-            return (
-                <div className="flex">
-                    <Sidebar />
-                    <div className="ml-56 flex-1 p-6 min-h-screen">
-                        <CurrentView />
-                    </div>
-                    {editTask && <TaskModal task={editTask} onClose={function() { setEditTask(null); }} />}
-                    {modal === 'addTask' && <AddTaskModal onClose={function() { setModal(null); }} />}
-                </div>
-            );
-        }
-
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-    </script>
-</body>
-</html>
+                                                className={'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-left transition ' + (isHabitDone(h.id, TODAY) ? 'bg-emerald-90/30 border border-emerald-700/30' : 'bg-slate-900/50 border border-slate-700/30 hover:border-slate-600')}>{t.status === 'done' && 'âYî>=</span>
+                                                                            <span className={'flex-1 ' + (t.status === 'done' ? 'line-through text-slate-500'
