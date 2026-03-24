@@ -38,7 +38,6 @@
         const { useState, useEffect } = React;
         const { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } = Recharts;
 
-        // Sample data
         const TEAM_MEMBERS = [
             { id: 1, name: 'Sarah Chen', initials: 'SC', color: 'bg-blue-500' },
             { id: 2, name: 'Alex Kim', initials: 'AK', color: 'bg-indigo-500' },
@@ -209,7 +208,7 @@
                                 {recentTasks.map(task => (
                                     <div key={task.id} className="p-3 bg-slate-700 rounded cursor-pointer hover:bg-slate-600 transition" onClick={() => onTaskClick(task)}>
                                         <p className="text-white font-medium text-sm">{task.title}</p>
-                                        <p className="text-gray-400 text-xs">{task.assignee} • {task.status}</p>
+                                        <p className="text-gray-400 text-xs">{task.assignee} \u2022 {task.status}</p>
                                     </div>
                                 ))}
                             </div>
@@ -221,7 +220,7 @@
                                 {upcomingTasks.map(task => (
                                     <div key={task.id} className="p-3 bg-slate-700 rounded cursor-pointer hover:bg-slate-600 transition" onClick={() => onTaskClick(task)}>
                                         <p className="text-white font-medium text-sm">{task.title}</p>
-                                        <p className="text-gray-400 text-xs">{task.dueDate} • {task.assignee}</p>
+                                        <p className="text-gray-400 text-xs">{task.dueDate} \u2022 {task.assignee}</p>
                                     </div>
                                 ))}
                             </div>
@@ -389,8 +388,8 @@
         };
 
         const TimelineView = ({ tasks }) => {
-            const startDate = new Date(2026, 2, 1); // March 1
-            const endDate = new Date(2026, 4, 31); // May 31
+            const startDate = new Date(2026, 2, 1);
+            const endDate = new Date(2026, 4, 31);
             const today = new Date(2026, 2, 23);
 
             const getDayOffset = (date) => {
